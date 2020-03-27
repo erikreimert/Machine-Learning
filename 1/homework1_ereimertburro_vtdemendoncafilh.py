@@ -4,10 +4,10 @@ def problem1 (A, B):
     return A + B
 
 def problem2 (A, B, C):
-    return A.dot(B) - C
+    return np.dot(A, B) - C
 
 def problem3 (A, B, C):
-    return A * B + C.transpose()
+    return A * B + np.transpose(C)
 
 def problem4 (x, y):
     return np.inner(x, y)
