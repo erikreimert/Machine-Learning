@@ -19,7 +19,7 @@ def problem6 (A):
     return np.ones_like(A)
 
 def problem7 (A, alpha):
-    return A + alpha.dot(np.eye(A.shape)  #fix
+    return A + alpha.dot(np.eye(A.shape)
 
 def problem8 (A, i, j):
     return A.item(j,i)
@@ -29,7 +29,10 @@ def problem9 (A, i): #probably wrong
     return B.item(0, i)
 
 def problem10 (A, c, d):
-    return ...
+    if c > d:
+        return np.mean(A[np.nonzero(A <= c and A >=d)])
+    else d > c:
+        return np.mean(/A[np.nonzero(A >= c and A <= d)])
 
 def problem11 (A, k):
     return ...
