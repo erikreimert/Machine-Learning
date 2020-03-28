@@ -7,7 +7,7 @@ def problem2 (A, B, C):
     return np.dot(A, B) - C
 
 def problem3 (A, B, C):
-    return A * B + np.transpose(C)
+    return A * B + C.getT()
 
 def problem4 (x, y):
     return np.inner(x, y)
@@ -19,7 +19,7 @@ def problem6 (A):
     return np.ones_like(A)
 
 def problem7 (A, alpha):
-    return A + alpha.dot(A.eye())
+    return A + alpha.dot(np.eye(A.shape)  #fix
 
 def problem8 (A, i, j):
     return A.item(j,i)
