@@ -3,7 +3,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 
 def fPC (y, yhat): #this takes in a vector of ground-truth labels and corresponding vector of guesses, and then computes the accuracy (PC). The implementation (in vectorized form) should only take 1-line.
-    pass
+    return np.mean(y == yhat)
 
 def measureAccuracyOfPredictors (predictors, X, y): #this takes in a set of predictors, a set of images to run it on, as well as the ground-truth labels of that set. For each image in the image set, it runs the ensemble to obtain a prediction. Then, it computes and returns the accuracy (PC) of the predictions w.r.t. the ground-truth labels.
     pass
