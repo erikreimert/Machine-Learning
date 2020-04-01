@@ -22,7 +22,7 @@ def problem7 (A, alpha):
     return A + (alpha* np.eye(A.shape))
 
 def problem8 (A, i, j):
-    return A.item(j,i)
+    return A[i][j]
 
 def problem9 (A, i): #probably wrong
     B = np.sum(A, axis = 1, keepdims = True)
@@ -31,8 +31,8 @@ def problem9 (A, i): #probably wrong
 def problem10 (A, c, d):
     if c > d:
         return np.mean(A[np.nonzero(A <= c and A >=d)])
-    else d > c:
-        return np.mean(A[np.nonzero(A >= c and A <= d)])
+    elif d > c:
+        return np.mean(A[np.nonzero(A >= c and A <=d)])
 
 def problem11 (A, k):
     eigValues = np.linalg.eig(A)[1]

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
-import import ipdb; ipdb.set_trace()
+# import import ipdb; ipdb.set_trace()
 
 def fPC (y, yhat): #this takes in a vector of ground-truth labels and corresponding vector of guesses, and then computes the accuracy (PC). The implementation (in vectorized form) should only take 1-line.
     return np.mean(y == yhat)
@@ -11,7 +11,8 @@ def measureAccuracyOfPredictors (predictors, X, y): #this takes in a set of pred
  #Initialize counters as 0 in shape of y(true value)
     counter = np.zeros(y.shape)
 
-    for r1,c1,r2,c2 in predictors:
+    for i in predictors:
+        r1, r2, c1, c2 = i
         #Compare if pixel (r1,c1) is brighter than (r2,c2)
         x_diff = X[:,r1,c1] - X[:,r2,c2]
 
@@ -23,7 +24,7 @@ def measureAccuracyOfPredictors (predictors, X, y): #this takes in a set of pred
         counter = counter + x_diff
 
     #define the mean
-    mean = np.sum(counter) / len(predictors)
+    mean = counter / len(predictors)
 
     #Check if prediction is above 0.5 and classify it
     if mean > 0.5:
@@ -37,8 +38,10 @@ def measureAccuracyOfPredictors (predictors, X, y): #this takes in a set of pred
 
 
 def stepwiseRegression (trainingFaces, trainingLabels, testingFaces, testingLabels):
- predictors = []
+
+    predictors = []
     maxAccuracy = []
+
     for m in range(0,4):
         maxAccuracy = 0
         bestPixelPair = None
@@ -53,9 +56,11 @@ def stepwiseRegression (trainingFaces, trainingLabels, testingFaces, testingLabe
                         if (r1,c1,r2,c2) in predictors:
                             continue
 
-                        measuredAccuracy = measureAccuracyOfPredictors(np.append(predictors,list(((r1,c1,r2,c2),))), trainingFaces, trainingLabels)
+                        newPredictors = np.append(predictors,np.array([[r1,c1, r2,c2]], axis = 0))
+                        measuredAccuracy = measureAccuracyOfPredictors(newPredictors, trainingFaces, trainingLabels)
 
                         if measuredAccuracy > maxAccuracy:
+
                             maxAccuracy = measuredAccuracy
                             bestPixelPair = (r1,c1,r2,c2)
 
@@ -78,7 +83,16 @@ def stepwiseRegression (trainingFaces, trainingLabels, testingFaces, testingLabe
         # Display the merged result
         plt.show()
 
+        print(predictors)
     return predictors[-4:]
+
+# For n = 2000, visualize the m = 5 features that were learned by (a) displaying any face image from the test set; and (b) drawing a square around the specific pixel locations ((r1, c1) and (r2, c2)) that are examined by the feature. You can use the example code in the homework1 smile.py template to render the image
+def visualize (predictors, testingFaces):
+    pass
+
+#analyze training/testing accuracy changes as a function of number of examples n ∈ {400, 800, 1200, 1600, 2000} (implement this in a for-loop)
+def analyze (trainingFaces, trainingLabels, testingFaces, testingLabels):
+    pass
 
 def loadData (which):
     faces = np.load("{}ingFaces.npy".format(which))
