@@ -11,7 +11,10 @@ def measureAccuracyOfPredictors (predictors, X, y): #this takes in a set of pred
  #Initialize counters as 0 in shape of y(true value)
     counter = np.zeros(y.shape)
 
-    for r1, r2, c1, c2 in predictors:
+    print (predictors)
+    for x in predictors:
+        r1, c1, r2, c2 = x
+
         #Compare if pixel (r1,c1) is brighter than (r2,c2)
         x_diff = X[:,r1,c1] - X[:,r2,c2]
 
@@ -26,10 +29,8 @@ def measureAccuracyOfPredictors (predictors, X, y): #this takes in a set of pred
     mean = counter / len(predictors)
 
     #Check if prediction is above 0.5 and classify it
-    if mean > 0.5:
-        return fPC(y, 1)
-    else:
-        return fPC(y,0)
+    mean[mean > 0.5] = 1
+    mean[mean <= 0.5]= 0
 
 
     #Calculate the accuracy using fPC between true values y and our mean (slide lecture 2)
@@ -55,16 +56,16 @@ def stepwiseRegression (trainingFaces, trainingLabels, testingFaces, testingLabe
                         if (r1,c1,r2,c2) in predictors:
                             continue
 
-                        newPredictors = np.append(predictors,np.array([[r1,c1, r2,c2]]))
+                        newPredictors = predictors + list(((r1,c1,r2,c2),))
                         measuredAccuracy = measureAccuracyOfPredictors(newPredictors, trainingFaces, trainingLabels)
 
                         if measuredAccuracy > maxAccuracy:
-
                             maxAccuracy = measuredAccuracy
                             bestPixelPair = (r1,c1,r2,c2)
 
         predictors.append(bestPixelPair)
-        r1,c1,r2,c2 = bestPixelPair
+
+    r1,c1,r2,c2 = bestPixelPair
     print('best Pixel Pair ', bestPixelPair, 'with max Accuracy ',maxAccuracy)
 
     show = False
@@ -83,7 +84,7 @@ def stepwiseRegression (trainingFaces, trainingLabels, testingFaces, testingLabe
         plt.show()
 
         print(predictors)
-    return predictors[-4:]
+    return predictors
 
 # For n = 2000, visualize the m = 5 features that were learned by (a) displaying any face image from the test set; and (b) drawing a square around the specific pixel locations ((r1, c1) and (r2, c2)) that are examined by the feature. You can use the example code in the homework1 smile.py template to render the image
 def visualize (predictors, testingFaces):
