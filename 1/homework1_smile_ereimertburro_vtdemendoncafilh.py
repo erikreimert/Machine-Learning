@@ -56,7 +56,7 @@ def stepwiseRegression (trainingFaces, trainingLabels, testingFaces, testingLabe
                         if (r1,c1,r2,c2) in predictors:
                             continue
 
-                        newPredictors = np.append(predictors,np.array([[r1,c1, r2,c2]], axis = 0))
+                        newPredictors = np.append(predictors,np.array([[r1,c1, r2,c2]]))
                         measuredAccuracy = measureAccuracyOfPredictors(newPredictors, trainingFaces, trainingLabels)
 
                         if measuredAccuracy > maxAccuracy:
