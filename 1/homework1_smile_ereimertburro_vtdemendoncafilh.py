@@ -11,8 +11,7 @@ def measureAccuracyOfPredictors (predictors, X, y): #this takes in a set of pred
  #Initialize counters as 0 in shape of y(true value)
     counter = np.zeros(y.shape)
 
-    for i in predictors:
-        r1, r2, c1, c2 = i
+    for r1, r2, c1, c2 in predictors:
         #Compare if pixel (r1,c1) is brighter than (r2,c2)
         x_diff = X[:,r1,c1] - X[:,r2,c2]
 
