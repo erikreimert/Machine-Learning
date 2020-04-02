@@ -102,7 +102,7 @@ def analyze (trainingFaces, trainingLabels, testingFaces, testingLabels):
 
         #prints best accuracy, best pixel for test with n amount of samples
         print("Testing for n =", x, "\n")
-        predictorsStorage = stepwiseRegression(trainingFaces[:x],trainingLabels[:x], testingFaces[:x], testingLabels[:x])
+        predictorsStorage = stepwiseRegression(trainingFaces[:x],trainingLabels[:x], testingFaces, testingLabelss)
         #get each element break down the tuple of 4 into two tuples of two.
         #make r1c1 green and r2c2 red
     visualize(predictorsStorage, testingFaces)
