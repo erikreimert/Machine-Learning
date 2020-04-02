@@ -7,7 +7,7 @@ def problem2 (A, B, C):
     return np.dot(A, B) - C
 
 def problem3 (A, B, C):
-    return A * B + C.getT()
+    return A * B + C.T()
 
 def problem4 (x, y):
     return np.inner(x, y)
@@ -16,7 +16,7 @@ def problem5 (A):
     return np.zeros_like(A)
 
 def problem6 (A):
-    return np.ones((A.shape[0,],1))
+    return np.ones((A.shape[0],1))
 
 def problem7 (A, alpha):
     return A + (alpha* np.eye(A.shape))
@@ -24,7 +24,7 @@ def problem7 (A, alpha):
 def problem8 (A, i, j):
     return A[i][j]
 
-def problem9 (A, i): #probably wrong
+def problem9 (A, i):
     B = np.sum(A, axis = 1, keepdims = True)
     return B.item(0, i)
 
