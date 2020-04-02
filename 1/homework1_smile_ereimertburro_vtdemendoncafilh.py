@@ -11,7 +11,7 @@ def measureAccuracyOfPredictors (predictors, X, y): #this takes in a set of pred
  #Initialize counters as 0 in shape of y(true value)
     counter = np.zeros(y.shape)
 
-    print (predictors)
+    # print (predictors)
     for x in predictors:
         r1, c1, r2, c2 = x
 
@@ -66,33 +66,46 @@ def stepwiseRegression (trainingFaces, trainingLabels, testingFaces, testingLabe
         predictors.append(bestPixelPair)
 
     r1,c1,r2,c2 = bestPixelPair
-    print('best Pixel Pair ', bestPixelPair, 'with max Accuracy ',maxAccuracy)
+    print('best Pixel Pair ', bestPixelPair, 'with training Accuracy ',maxAccuracy, "and testing accuracy", measuredAccuracy, "\n")
 
-    show = False
-    if show:
-        # Show an arbitrary test image in grayscale
-        im = testingFaces[0,:,:]
-        fig,ax = plt.subplots(1)
-        ax.imshow(im, cmap='gray')
+        # print(predictors)
+    return predictors
+
+#i spent two hours trying to figure out how to do this and then i saw that you wrote it in the other function, i laughed and cried a bit
+def visualize(predictors, testingFaces):
+    # Show an arbitrary test image in grayscale
+    im = testingFaces[0,:,:]
+    fig,ax = plt.subplots(1)
+    ax.imshow(im, cmap='gray')
+
+    for x in predictors:
+        r1,c1,r2,c2 = x
         # Show r1,c1
         rect = patches.Rectangle((c1 - 0.5, r1 - 0.5), 1, 1, linewidth=2, edgecolor='r', facecolor='none')
         ax.add_patch(rect)
         # Show r2,c2
         rect = patches.Rectangle((c2 - 0.5, r2 - 0.5), 1, 1, linewidth=2, edgecolor='b', facecolor='none')
         ax.add_patch(rect)
-        # Display the merged result
-        plt.show()
 
-        print(predictors)
-    return predictors
+    # Display the merged result
+    plt.show()
 
-# For n = 2000, visualize the m = 5 features that were learned by (a) displaying any face image from the test set; and (b) drawing a square around the specific pixel locations ((r1, c1) and (r2, c2)) that are examined by the feature. You can use the example code in the homework1 smile.py template to render the image
-def visualize (predictors, testingFaces):
-    pass
 
 #analyze training/testing accuracy changes as a function of number of examples n ∈ {400, 800, 1200, 1600, 2000} (implement this in a for-loop)
 def analyze (trainingFaces, trainingLabels, testingFaces, testingLabels):
-    pass
+
+    test = [400, 800, 1200, 1600, 2000]
+
+    predictorsStorage = []
+    accuracyStorage = []
+    for x in test:
+
+        #prints best accuracy, best pixel for test with n amount of samples
+        print("Testing for n =", x, "\n")
+        predictorsStorage = stepwiseRegression(trainingFaces[:x],trainingLabels[:x], testingFaces[:x], testingLabels[:x])
+        #get each element break down the tuple of 4 into two tuples of two.
+        #make r1c1 green and r2c2 red
+    visualize(predictorsStorage, testingFaces)
 
 def loadData (which):
     faces = np.load("{}ingFaces.npy".format(which))
@@ -103,4 +116,5 @@ def loadData (which):
 if __name__ == "__main__":
     testingFaces, testingLabels = loadData("test")
     trainingFaces, trainingLabels = loadData("train")
-    stepwiseRegression(trainingFaces,trainingLabels, testingFaces, testingLabels)
+    analyze(trainingFaces,trainingLabels, testingFaces, testingLabels)
+    # stepwiseRegression(trainingFaces,trainingLabels, testingFaces, testingLabels)
