@@ -11,38 +11,35 @@ def reshapeAndAppend1s (faces):
 
 ###########################################################Is it np.dot() or the multiplication
 def fMSE (w, Xtilde, y):
-    return np.mean((Xtilde.transpose() * w -y)**2)/2
+    return np.mean((Xtilde.transpose().dot(w) -y)**2)/2
 ###########################################################
 
 # Given a vector of weights w, a design matrix Xtilde, and a vector of labels y, and a regularization strength
 # alpha (default value of 0), return the gradient of the (regularized) MSE loss.
-def gradfMSE (w, Xtilde, y, alpha = 1):
-    pass    alpha * np.mean(Xtilde*(np.dot(np.transpose(Xtilde), w) - y)) #########How to incorporate alpha
+def gradfMSE (w, Xtilde, y, alpha = 0.):
+    pass     np.mean((np.dot(np.transpose(Xtilde), w) - y)* Xtilde)+  alpha*(w**2)/2 #########How to incorporate alpha
 
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using the analytical solution.
 def method1 (Xtilde, y):
     ones = np.ones((1,2304))
     Xtilde =  np.vstack(Xtilde, ones)
     Wtilde = np.linalg.solve(Xtilde, np.transpose(Xtilde)) * Xtilde * y
+    loss = fMSE(w,Xtilde,y)
+    return (Wtilde, loss)
 
 
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using gradient descent on fMSE.
 def method2 (Xtilde, y):
     #Choose random starting position
     w = np.random.randn(1,2304) * 0.01
-    lossArray = 0
-    for i in range(0,1000):
-        w = w - gradfMSE(w, Xtilde, y, alpha = 0.1)
-        lossArray = lossArray + gradfMSE(w, Xtilde, y, alpha = 0.1)
-    return (w,lossArray)
+    gradientDescent(Xtilde, y, alph)
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using gradient descent on fMSE
 # with regularization.
 def method3 (Xtilde, y):
     ALPHA = 0.1
     #####IMPLEMENT Gradient descent
-    w =?
-    gradfMSE(w, Xtilde, y, alpha = ALPHA)
-    pass
+    w = np.random.randn(1,2304) * 0.01
+    gradientDescent(Xtilde, y, alpha = ALPHA)
 
 # Helper method for method2 and method3.
 def gradientDescent (Xtilde, y, alpha = 0.):
@@ -51,7 +48,7 @@ def gradientDescent (Xtilde, y, alpha = 0.):
     w = np.random.randn(1,2304) * 0.01
     lossArray = 0
     for i in range(0,T):
-        w = w - gradfMSE(w, Xtilde, y, alpha = 0.1)
+        w = w - EPSILON*gradfMSE(w, Xtilde, y, alpha = 0.)
         lossArray = lossArray + gradfMSE(w, Xtilde, y, alpha = 0.1)
     return (w,lossArray)
 
