@@ -16,18 +16,25 @@ def fMSE (w, Xtilde, y):
 
 # Given a vector of weights w, a design matrix Xtilde, and a vector of labels y, and a regularization strength
 # alpha (default value of 0), return the gradient of the (regularized) MSE loss.
-def gradfMSE (w, Xtilde, y, alpha = 0.):
-    pass    np.mean(Xtilde*(np.dot(np.transpose(Xtilde), w) - y)) #########How to incorporate alpha
+def gradfMSE (w, Xtilde, y, alpha = 1):
+    pass    alpha * np.mean(Xtilde*(np.dot(np.transpose(Xtilde), w) - y)) #########How to incorporate alpha
 
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using the analytical solution.
 def method1 (Xtilde, y):
-    w = np.linalg.solve(Xtilde, np.transpose(Xtilde)) * Xtilde * y
+    ones = np.ones((1,2304))
+    Xtilde =  np.vstack(Xtilde, ones)
+    Wtilde = np.linalg.solve(Xtilde, np.transpose(Xtilde)) * Xtilde * y
 
 
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using gradient descent on fMSE.
 def method2 (Xtilde, y):
-    pass
-
+    #Choose random starting position
+    w = np.random.randn(1,2304) * 0.01
+    lossArray = 0
+    for i in range(0,1000):
+        w = w - gradfMSE(w, Xtilde, y, alpha = 0.1)
+        lossArray = lossArray + gradfMSE(w, Xtilde, y, alpha = 0.1)
+    return (w,lossArray)
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using gradient descent on fMSE
 # with regularization.
 def method3 (Xtilde, y):
@@ -41,6 +48,12 @@ def method3 (Xtilde, y):
 def gradientDescent (Xtilde, y, alpha = 0.):
     EPSILON = 3e-3  # Step size aka learning rate
     T = 5000  # Number of gradient descent iterations
+    w = np.random.randn(1,2304) * 0.01
+    lossArray = 0
+    for i in range(0,T):
+        w = w - gradfMSE(w, Xtilde, y, alpha = 0.1)
+        lossArray = lossArray + gradfMSE(w, Xtilde, y, alpha = 0.1)
+    return (w,lossArray)
 
 if __name__ == "__main__":
     # Load data
