@@ -4,33 +4,34 @@ from PIL import Image
 # Given an array of faces (N x M x M, where N is number of examples and M is number of pixes along each axis),
 # return a design matrix Xtilde ((M**2 + 1) x N) whose last row contains all 1s.
 def reshapeAndAppend1s (faces):
-    pass
+    ones = np.ones((1, 5000))
+    faces =np.reshape(faces, (2304, 5000))
+    return np.vstack((faces, ones))
 
 # Given a vector of weights w, a design matrix Xtilde, and a vector of labels y, return the (unregularized)
 # MSE.
-
 def fMSE (w, Xtilde, y):
     return np.mean((Xtilde.transpose().dot(w) - y)**2)/2
+
 
 # Given a vector of weights w, a design matrix Xtilde, and a vector of labels y, and a regularization strength
 # alpha (default value of 0), return the gradient of the (regularized) MSE loss.
 def gradfMSE (w, Xtilde, y, alpha = 0.):
-    return np.mean((np.dot(Xtilde.transpose(), w) - y)).dot(Xtilde)) + alpha*(w**2)/2 #########How to incorporate alpha
+    return np.mean((np.dot(Xtilde.transpose(), w) - y)).dot(Xtilde) + alpha*(w**2)/2
 
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using the analytical solution.
-# def method1 (Xtilde, y):
-#     ones = np.ones((,2304))
-#     Xtilde = np.vstack((Xtilde,ones))
-#     Wtilde = np.linalg.solve(Xtilde.dot(np.transpose(Xtilde)), Xtilde.dot(y))
-#     loss = fMSE(w,Xtilde,y)
-#     print('Wtilde: ', Wtilde,"Loss: ", loss)
-#     return (Wtilde, loss)
-
+def method1 (Xtilde, y):
+    ones = np.ones((1,2304))
+    Xtilde = np.vstack((Xtilde, ones))
+    Wtilde = np.linalg.solve(Xtilde.dot(np.transpose(Xtilde)), Xtilde.dot(y))
+    loss = fMSE(w,Xtilde,y)
+    print('Wtilde: ', Wtilde,"Loss: ", loss)
+    return (Wtilde, loss)
 
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using gradient descent on fMSE.
 def method2 (Xtilde, y):
-    #Choose random starting position
     return gradientDescent(Xtilde, y)
+
 # Given a design matrix Xtilde and labels y, train a linear regressor for Xtilde and y using gradient descent on fMSE
 # with regularization.
 def method3 (Xtilde, y):
@@ -56,15 +57,9 @@ if __name__ == "__main__":
     Xtilde_te = reshapeAndAppend1s(np.load("age_regression_Xte.npy"))
     yte = np.load("age_regression_yte.npy")
 
-    gradientDescent(Xtilde_tr, ytr)
-    # w1 = method1(Xtilde_tr, ytr)
+    w1 = method1(Xtilde_tr, ytr)
     w2 = method2(Xtilde_tr, ytr)
     w3 = method3(Xtilde_tr, ytr)
 
-
     # Report fMSE cost using each of the three learned weight vectors
     # ...
-
-
-    im = Image.open('img.jpg')
-    # im.show('image',im)
