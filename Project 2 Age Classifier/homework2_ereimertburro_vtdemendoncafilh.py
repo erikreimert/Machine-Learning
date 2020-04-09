@@ -68,6 +68,12 @@ def visualize(w, pictitle):
     plt.imshow(wimg)
     plt.savefig((pictitle+ ".png"))
 
+# def worstVal(worst):
+#     shits = sorted(worst, key = abs).reverse() # worst values ordered by absolute value high to low
+#     for x in range(0,4):
+#         shitnum = str(x)
+#         visualize(shits[x], ("Egregious", shitnum))
+#     return shits[:5]
 
 if __name__ == "__main__":
     # Load data
@@ -115,10 +121,12 @@ if __name__ == "__main__":
 
     w3test = method3(Xtilde_te, yte)
     loss3te = fMSE(w3test, Xtilde_te, yte)
-    bias3te = w3test[-1]
+    bias3te = w2test[-1]
     print("\nLoss for W3 Test: ", loss3te)
     print("Bias for W3 Test: ", bias3te)
     visualize(w3test, 'Method 3 Test')
+    # theShits = worstVal(w3test)
+    # Print("These are the worst values... ew: ", theShits)
 
     # Report fMSE cost using each of the three learned weight vectors
     # ...
