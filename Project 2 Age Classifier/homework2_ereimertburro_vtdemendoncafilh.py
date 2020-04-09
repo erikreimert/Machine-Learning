@@ -128,8 +128,6 @@ if __name__ == "__main__":
     # theShits = worstVal(w3test)
     # Print("These are the worst values... ew: ", theShits)
 
-    # Report fMSE cost using each of the three learned weight vectors
-    # ...
 
     im = Image.open('img.jpg')
     im.show('image',im)
