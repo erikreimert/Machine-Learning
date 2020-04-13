@@ -91,12 +91,12 @@ if __name__ == "__main__":
     print("Bias for W1: ", bias1tr)
     visualize(w1, 'Method 1')
 
-    w1test = method1(Xtilde_te, yte)
-    loss1te = fMSE(w1test, Xtilde_te, yte)
-    bias1te = w1test[-1]
+    # w1test = method1(Xtilde_te, yte)
+    loss1te = fMSE(w1, Xtilde_te, yte)
+    # bias1te = w1test[-1]
     print("\nLoss for W1 Test: ", loss1te)
-    print("Bias for W1 Test: ", bias1te)
-    visualize(w1test, 'Method 1 Test')
+    # print("Bias for W1 Test: ", bias1te)
+    # visualize(w1test, 'Method 1 Test')
 
     w2 = method2(Xtilde_tr, ytr)
     loss2tr = fMSE(w2,Xtilde_tr, ytr)
@@ -105,26 +105,26 @@ if __name__ == "__main__":
     print("Bias for W2: ", bias2tr)
     visualize(w2, 'Method 2')
 
-    w2test = method2(Xtilde_te, yte)
-    loss2te = fMSE(w2test, Xtilde_te, yte)
-    bias2te = w2test[-1]
+    # w2test = method2(Xtilde_te, yte)
+    loss2te = fMSE(w2, Xtilde_te, yte)
+    # bias2te = w2test[-1]
     print("\nLoss for W2 Test: ", loss2te)
-    print("Bias for W2 Test: ", bias2te)
-    visualize(w2test, 'Method 2 Test')
+    # print("Bias for W2 Test: ", bias2te)
+    # visualize(w2test, 'Method 2 Test')
 
     w3 = method3(Xtilde_tr, ytr)
     loss3tr = fMSE(w3,Xtilde_tr, ytr)
-    bias3tr = w2[-1]
+    bias3tr = w3[-1]
     print("\nLoss for W3: ",loss3tr)
     print("Bias for W3: ",bias3tr)
-    visualize(w2, 'Method 3')
+    visualize(w3, 'Method 3')
 
-    w3test = method3(Xtilde_te, yte)
-    loss3te = fMSE(w3test, Xtilde_te, yte)
-    bias3te = w2test[-1]
+    # w3test = method3(Xtilde_te, yte)
+    loss3te = fMSE(w3, Xtilde_te, yte)
+    # bias3te = w3[-1]
     print("\nLoss for W3 Test: ", loss3te)
-    print("Bias for W3 Test: ", bias3te)
-    visualize(w3test, 'Method 3 Test')
+    # print("Bias for W3 Test: ", bias3te)
+    # visualize(w3, 'Method 3 Test')
     # theShits = worstVal(w3test)
     # Print("These are the worst values... ew: ", theShits)
 
