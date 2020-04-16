@@ -168,8 +168,9 @@ def augment(trainingImages):
     Xaug = np.array(784,500) #make (784,5000) array
     for x in trainingImages:
         newimg = trans[randint(1,5)](x)
-        #change new img to (784, )
+
         Xaug = np.append(Xaug, newimg)
+    ###########################################################reshape Xaug from (28,28,5000) to (784,5000) (check the shape of Xaug first im not sure thats the actual shape)    
     return Xaug
 ###############################################################
     # where i get the stuff for the pdf
