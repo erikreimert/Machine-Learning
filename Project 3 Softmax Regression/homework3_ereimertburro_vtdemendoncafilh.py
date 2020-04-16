@@ -13,7 +13,7 @@ from skimage.util import random_noise
 #Add bias, same as last time. Adjusted to size of matrix
 def reshapeAndAppend1s (faces):
     ones = np.ones((faces.shape[0],1))
-    faces =np.append(faces, ones, axis = 1)
+    faces =np.hstack((faces, ones))
     return faces
 
 
@@ -22,29 +22,34 @@ def permutationData(X, y):
     permute = np.random.permutation(X.shape[0])
     Xpermute = X[permute]
     ypermute = y[permute]
+
     return Xpermute, ypermute
 
 
+#Stochastic Gradient Descent with SoftMax Problem
 #Stochastic Gradient Descent with SoftMax Problem
 def SGD(X, y, batchSize = 100, epsilon = .1):
     #Initiate W like HW 2, adjust dimensions
     w =  np.random.randn(X.shape[1], 10) * .1
 
     #Epochs with randomization
-    epochs = 200
+    epochs = 300
     for i in range(epochs):
         X, y = permutationData(X, y)
         X_batches, y_batches = miniBatch(X, y, 100)
 
         #Softmax problem
         #Same idea as last hw
+        #get print variable
+        printvar = True
         for X_batch, y_batch in zip(X_batches, y_batches):
             z = softMax(X_batch, w)
             loss = fCE(y_batch, z)
             w = w - (epsilon * gradfCE(X_batch, y_batch, w))
 
-
-            print("Epoch: ", i, "Loss: ", np.mean(loss), "Weights: ", w)
+            if printvar and i >= 280:
+                printvar = False
+                print("Epoch: ", i + 1, "Loss: ", np.mean(loss))
 
     return w
 
@@ -74,11 +79,12 @@ def miniBatch(X, y, batchSize):
 #Cross Entropy
 def fCE(y, yhat):
     crossEntropy =  -1 / y.shape[0] * np.sum(y * np.log(yhat), axis = 1)
-    print(crossEntropy)
+    #print(crossEntropy)
 
     return crossEntropy
 
 
+#Gradient Cross Entropy
 #Gradient Cross Entropy
 def gradfCE(X, y, w):
     yhat = softMax(X, w)
@@ -94,17 +100,22 @@ def classify(X, y, w):
     yhat = np.zeros(np.shape(z))
     encoded_idx = z.argmax(axis = 1)
     yhat[np.arange(np.shape(z)[0]), encoded_idx] = 1
-    print(yhat)
+
     return yhat
 
 
 
 #Check accuracy of guesses
-def percentAccuracy(X,y, yhat, w):
-    newY = [np.where(i == 1)[0][0] for i in y]
-    newYhat = [np.where(i == 1)[0][0] for i in yhat]
+def percentAccuracy(y, yhat):
+    accuracy = 0.0
 
-    return np.mean(newY == newYhat)
+    for i in range(0,y.shape[0]):
+        if (y[i] == yhat[i]).all():
+            accuracy = accuracy + 1
+        else:
+            continue
+
+    return accuracy/y.shape[0]
 
 
 
@@ -113,33 +124,30 @@ def percentAccuracy(X,y, yhat, w):
 ##############################################################
 #Data augmentation section
 
-#shifts image
 #this works
+#shifts image
 def shift(image):
-    if (randint(1,4) >= 2):
-        changex = random.randrange(-5,-1)
-        changey = random.randrange(-5,-1)
-    else:
-        changex = random.randrange(1,5)
-        changey = random.randrange(1,5)
+    factor = [-5,-4,-3,-2,-1,1,2,3,4,5]
+    changex = random.choice(factor)
+    changey = random.choice(factor)
 
     transform = AffineTransform(translation=(changex,changey))
     return warp(image, transform, mode = "wrap")
 
+#this works
 #45 degree rotation
-#this works
 def r1 (image):
-    return rotate(x, angle = 20)
+    return rotate(image, angle = 20)
 
-#-45 degree rotation
 #this works
+#-45 degree rotation
 def r2(image):
-    return rotate(x, angle = -20)
+    return rotate(image, angle = -20)
 
-#adds noise to the image
 # this works
+#adds noise to the image
 def noise(image):
-    return random_noise(x)
+    return random_noise(image)
 
 #yes worky
 # rescales testingImages
@@ -162,43 +170,61 @@ def scale(image):
         emptyimg[location:final,location:final] = image
         return emptyimg
 
-def augment(trainingImages):
+def augment(trainingImages, ahhh):
     #dictionary with the augmenting functions
     trans = {1: r1, 2: r2, 3: shift, 4: noise, 5: scale}
-    Xaug = np.array(784,500) #make (784,5000) array
+    hold = ahhh
+    i = 0
+    # location = 0
+    # location2 = 784
     for x in trainingImages:
-        newimg = trans[randint(1,5)](x)
-
-        Xaug = np.append(Xaug, newimg)
-    ###########################################################reshape Xaug from (28,28,5000) to (784,5000) (check the shape of Xaug first im not sure thats the actual shape)    
-    return Xaug
+        i +=1
+        if (i==4999):
+            print("Done augmenting data")
+        # print(i)
+        newimg = trans[random.randrange(1,5)](x)
+        hold = np.append(hold, newimg)
+    hold = hold.reshape(5000,784)
+    return hold
 ###############################################################
     # where i get the stuff for the pdf
 def pdfstuff(x , trainingImages):
-    if(x == 0):
-        plt.title("Original")
-        plt.imshow(trainingImages)
-        plt.savefig(("Original"+ ".png"))
     if(x == 1):
         plt.title("Rotation")
         rotate = r1(trainingImages)
         plt.imshow(rotate)
         plt.savefig(("Rotation"+ ".png"))
+
+        plt.title("Original 1")
+        plt.imshow(trainingImages)
+        plt.savefig(("Original 1"+ ".png"))
     if(x == 2):
         plt.title("Shift")
         shifty = shift(trainingImages)
         plt.imshow(shifty)
         plt.savefig(("Shift"+ ".png"))
+
+        plt.title("Original 2")
+        plt.imshow(trainingImages)
+        plt.savefig(("Original 2"+ ".png"))
     if(x==3):
         plt.title("Noise")
         noisey = noise(trainingImages)
         plt.imshow(noisey)
         plt.savefig(("Noise"+ ".png"))
+
+        plt.title("Original 3")
+        plt.imshow(trainingImages)
+        plt.savefig(("Original 3"+ ".png"))
     if(x==4):
         plt.title("Scale")
         scaley = scale(trainingImages)
         plt.imshow(scaley)
         plt.savefig(("Scale"+ ".png"))
+
+        plt.title("Original 4")
+        plt.imshow(trainingImages)
+        plt.savefig(("Original 4"+ ".png"))
 
 
 
@@ -211,31 +237,37 @@ if __name__ == "__main__":
 
 
     reshapeimages = trainingImages.reshape(5000, 28, 28)
-
+    # print(reshapeimages.shape)
+    empty = np.zeros((0,28,28))
+    Xaug = augment(reshapeimages, empty)
+    Yaug = testingLabels
+    # print(trainingImages)
+    # print(Xaug)
 
     # Append a constant 1 term to each example to correspond to the bias terms
-    Xaug = augment(reshapeimages)
-    # X_tr = reshapeAndAppend1s(trainingImages)
-    # X_te = reshapeAndAppend1s(testingImages)
+    X_tr = reshapeAndAppend1s(trainingImages)
+    X_te = reshapeAndAppend1s(testingImages)
 
-    #
+    ##########for printing the images, not necessary to run
     # i = 0
     # for x  in reshapeimages:
     #     pdfstuff(i, x)
-    #     if (i == 5):
+    #     if (i == 4):
     #         break
     #     i += 1
 
-    # yaug = trainingLabels #given they are inputted in order and return only one copy the order for yaug should be the same
 
-    # W = SGD(X_tr, trainingLabels)
-    #
-    #
-    # yhat = classify(X_te, testingLabels, W)
-    # accuracy = percentAccuracy(testingLabels, yhat)
-    #
-    # print("Testing Loss: ", (fCE(testingLabels, softMax(X_te, W))))
-    # print("Testing Accuracy: ", accuracy)
+    W = SGD(X_tr, trainingLabels)
+    yhat = classify(X_te, testingLabels, W)
+    accuracy = percentAccuracy(testingLabels, yhat)
+
+    print("Testing Loss: ", np.mean(fCE(testingLabels, softMax(X_te, W))))
+    print("Testing Accuracy: ", accuracy)
+    
+
 
     # Visualize the vectors
-    # ...
+    for i in range(0,9):
+        plotW = np.reshape(W[:784,i], (28,28))
+        plt.imshow(plotW)
+        plt.savefig("Weight{}.png".format(i))
