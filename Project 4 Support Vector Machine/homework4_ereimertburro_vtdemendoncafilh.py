@@ -10,22 +10,28 @@ class SVM4342 ():
     # contain n rows, where n is the number of examples.
     # y should correspondingly be an n-vector of labels (-1 or +1).
     def fit (self, X, y):
-        # TODO change these -- they should be matrices or vectors
-        G = 0
-        P = 0
-        q = 0
-        h = 0
+
+        Xtilde = np.append(X, np.ones((X.shape[0], 1)), axis=1)
+        m, n = Xtilde.shape
+
+        G = -1 * y.reshape(1, y.shape[0]).T * Xtilde
+        P = np.eye(n)
+        q = np.zeros(n)
+        h = np.full((m, 1), -1)
 
         # Solve -- if the variables above are defined correctly, you can call this as-is:
         sol = solvers.qp(matrix(P, tc='d'), matrix(q, tc='d'), matrix(G, tc='d'), matrix(h, tc='d'))
 
         # Fetch the learned hyperplane and bias parameters out of sol['x']
-        self.w = 0  # TODO change this
-        self.b = 0  # TODO change this
+        results = np.array(sol['x'])
+        self.w = results[:-1].reshape((results[:-1].shape[0]))
+        self.b = results[-1]
 
     # Given a 2-D matrix of examples X, output a vector of predicted class labels
     def predict (self, x):
-        return 0  # TODO fix
+        return np.sign(np.dot(x, self.w) + self.b)
+
+
 
 def test1 ():
     # Set up toy problem
@@ -74,7 +80,7 @@ def test2 (seed):
     if acc == 1 and diff < 1e-1:
         print("Passed")
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     test1()
     for seed in range(5):
         test2(seed)
