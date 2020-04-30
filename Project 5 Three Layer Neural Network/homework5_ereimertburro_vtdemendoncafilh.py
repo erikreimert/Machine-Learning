@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.optimize
+import scipy.optimize  
 
 NUM_INPUT = 784  # Number of input neurons
 NUM_HIDDEN = 40  # Number of hidden neurons
